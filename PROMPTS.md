@@ -324,3 +324,85 @@ Do not connect to the AI/backend yet.
 
 Make the page responsive, polished, and consistent with the existing InterviewPilot UI.
 
+<!-- Backend Starts -->
+
+
+We are building InterviewPilot, an AI technical interview agent for the AB Talks AI Cohort hackathon.
+
+I want to set up the Node.js + Express backend first.
+
+Create a clean backend structure for:
+- Express server
+- candidates.json
+- curriculum.json
+- API routes
+- interview service/agent logic
+- feedback generation
+
+For now, only set up the Express server and folder structure. Do not implement the AI agent yet.
+
+Use ES modules.
+Keep the code simple and beginner-friendly because I am learning while building this hackathon project.
+
+<!-- POST /api/interview -->
+
+We are building InterviewPilot for the AB Talks AI Cohort hackathon.
+
+The official technical specification requires exactly one main endpoint:
+
+POST /api/interview
+
+The endpoint must:
+- Accept sessionId and candidate on the first request.
+- Accept sessionId and message on subsequent requests.
+- Maintain interview state using sessionId.
+- Return { reply, done } during the interview.
+- Return { reply, done: true, feedback } when the interview is complete.
+
+Set up a clean Express backend using ES modules.
+
+Create:
+- routes/interviewRoutes.js
+- services/interviewService.js
+
+For now, do NOT use an LLM or implement the actual interview intelligence.
+
+Instead:
+1. Accept a new interview session.
+2. Store the candidate and basic session state in memory.
+3. Return a simple welcome message.
+4. Accept subsequent messages and return a temporary mock question.
+5. Keep the implementation simple and beginner-friendly.
+
+The endpoint must be:
+POST /api/interview
+
+<!-- jumpng to LMM -->
+
+We are building the InterviewPilot AI technical interview agent for the AB Talks AI Cohort hackathon.
+
+The mandatory requirements are:
+- Minimum 8 questions
+- At least 4 different curriculum days
+- Follow-up questions based on previous responses
+- Conversation context maintained throughout
+- Structured feedback at the end
+- POST /api/interview endpoint
+
+Implement the interview state/controller layer separately from the LLM.
+
+The controller must:
+1. Receive the candidate.
+2. Find curriculum days that the candidate has passed.
+3. Select at least 4 suitable curriculum days.
+4. Track the current curriculum day.
+5. Track question count.
+6. Store every AI question and candidate response in conversation history.
+7. Prevent the interview from ending before 8 questions.
+8. Prevent the interview from ending before 4 curriculum days have been covered.
+9. Allow the LLM to generate the actual question and adaptive follow-up.
+10. When the minimum requirements are satisfied and the interview is naturally complete, generate structured feedback.
+
+Do not implement the LLM yet.
+First build a reliable interview state machine that guarantees the hackathon requirements.
+Use ES modules and keep the implementation beginner-friendly.
