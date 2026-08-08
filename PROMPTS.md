@@ -178,3 +178,91 @@ Design:
 - Soft hover effects
 - Responsive
 - Production-ready React component.
+
+<!-- Candidate Selection  -->
+
+Create a Candidate Selection page for InterviewPilot using React, React Router, Tailwind CSS, and Lucide React.
+
+Keep the same dark navy (#0B1020) and purple gradient theme as the landing page.
+
+The page should allow the user to select a candidate before starting an AI technical interview.
+
+Include:
+
+- A top navigation/header with InterviewPilot logo.
+- Heading: "Select a Candidate"
+- Subtitle: "Choose a candidate profile to begin a personalized technical interview."
+
+Display 4 candidate profiles in a responsive grid.
+
+Each candidate card should contain:
+- Avatar with candidate initials
+- Candidate name
+- Role
+- Completed missions
+- Number of attempts
+- Learning progress
+- "Start Interview" button
+
+Use realistic sample candidate data for now.
+
+Design:
+- Dark navy background
+- Glassmorphism cards
+- Purple gradient accents
+- Rounded corners
+- Subtle purple glow on hover
+- Smooth transitions
+- Clean professional SaaS interface
+- Fully responsive
+
+Create:
+1. CandidateSelection.jsx
+2. CandidateCard.jsx
+
+Behavior:
+- When "Start Interview" is clicked, pass the selected candidate through React Router state.
+- Navigate to `/briefing`.
+- Do not connect to the backend yet.
+- Keep candidate data local for now.
+
+Use clean, reusable React components.
+
+<!-- Inerview page -->
+Create a realistic technical interview chat interface for InterviewPilot using React, React Router, Tailwind CSS, and Lucide React.
+
+Keep the existing dark navy and purple premium SaaS theme.
+
+The page should look like a real technical interview rather than a generic chatbot.
+
+Include:
+- Header with InterviewPilot logo, candidate name, "Technical Interview", Question 1 of 8, and Exit Interview button.
+- Scrollable conversation area.
+- AI interviewer messages on the left.
+- Candidate responses on the right.
+- Current technical question:
+  "Explain the concept of Retrieval-Augmented Generation (RAG) and why it is useful."
+- Multiline answer input at the bottom.
+- Submit Answer button.
+- Interview progress bar.
+- AI analyzing status after submission.
+
+Use mock conversation data for now.
+
+When the candidate submits an answer:
+- Add the answer to the conversation.
+- Show a temporary "AI is analyzing your response..." state.
+- Then display a placeholder follow-up question.
+- Do not call any backend or AI API yet.
+
+Use React state for the conversation and input.
+Make the interface responsive, polished, and production-quality.
+
+<!-- Fix the exit button -->
+Fix the Exit Interview button in Interview.jsx.
+
+When the user clicks Exit, navigate back to the Candidate Selection page at `/candidates` using React Router's useNavigate hook.
+
+Keep the existing styling and UI unchanged.
+
+Also ensure the candidate interview state is cleared by navigating away from the interview page.
