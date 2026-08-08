@@ -266,3 +266,61 @@ When the user clicks Exit, navigate back to the Candidate Selection page at `/ca
 Keep the existing styling and UI unchanged.
 
 Also ensure the candidate interview state is cleared by navigating away from the interview page.
+
+<!-- Feedback Page -->
+Create a Technical Interview Feedback page for InterviewPilot using React, React Router, Tailwind CSS, and Lucide React.
+
+Keep the same dark navy (#0B1020), purple gradient, glassmorphism SaaS design used throughout the application.
+
+The page should display structured feedback after the candidate completes the interview.
+
+Include:
+
+1. Header
+- InterviewPilot logo
+- "Interview Complete" status
+
+2. Overall Performance
+- Large overall score out of 100
+- Short summary of the candidate's performance
+- Visual circular or progress score
+
+3. Performance Breakdown
+Create cards for:
+- Technical Understanding
+- Depth of Explanation
+- Problem Solving
+- Communication
+
+Each should show a score and progress bar.
+
+4. Strengths
+Show 3 positive points based on the interview.
+
+5. Areas to Improve
+Show 3 actionable improvement points.
+
+6. Curriculum Coverage
+Show which AI Cohort topics were assessed, such as:
+- RAG
+- Vector Databases
+- Prompt Engineering
+- Agentic AI
+
+7. Interview Summary
+Show:
+- Questions asked
+- Follow-up questions
+- Curriculum days covered
+- Interview duration
+
+8. Buttons
+- "Try Another Interview" → navigate to `/candidates`
+- "Back to Home" → navigate to `/`
+
+Use mock data for now.
+
+Do not connect to the AI/backend yet.
+
+Make the page responsive, polished, and consistent with the existing InterviewPilot UI.
+

@@ -4,6 +4,7 @@ import LandingPage from "./pages/LandingPage";
 import CandidateSelection from "./pages/CandidateSelection";
 import InterviewBriefing from "./pages/InterviewBriefing";
 import Interview from "./pages/Interview";
+import Feedback from "./pages/Feedback";
 
 function App() {
   return (
@@ -25,7 +26,15 @@ function App() {
           path="/interview"
           element={<Interview />}
         />
+
+        <Route
+          path="/feedback"
+          element={<Feedback />}
+        />
       </Routes>
+
+    
+
     </BrowserRouter>
   );
 }
