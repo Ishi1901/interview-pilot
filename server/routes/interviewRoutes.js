@@ -12,7 +12,7 @@ import curriculum from "../data/curriculum.json" with {
 const router = express.Router();
 
 
-router.post("/interview", (req, res) => {
+router.post("/interview", async (req, res) => {
   try {
     const {
       sessionId,
@@ -33,7 +33,7 @@ router.post("/interview", (req, res) => {
         });
       }
 
-      const result = startInterview(
+      const result = await startInterview(
         sessionId,
         candidate,
         curriculum
@@ -55,7 +55,7 @@ router.post("/interview", (req, res) => {
         });
       }
 
-      const result =
+      const result =await 
         continueInterview(
           sessionId,
           message

@@ -406,3 +406,124 @@ The controller must:
 Do not implement the LLM yet.
 First build a reliable interview state machine that guarantees the hackathon requirements.
 Use ES modules and keep the implementation beginner-friendly.
+
+
+We are building InterviewPilot for the AB Talks AI Cohort hackathon.
+
+The backend already has:
+- Express
+- POST /api/interview
+- sessionId-based conversation state
+- interviewPlanner.js
+- interviewController.js
+- interviewService.js
+- candidates.json
+- curriculum.json
+
+The mandatory requirements are:
+- minimum 8 questions
+- at least 4 curriculum days
+- adaptive follow-up questions based on previous responses
+- conversation context throughout the interview
+- structured feedback at the end
+
+Now integrate an LLM into the backend.
+
+Use Groq as the LLM provider.
+
+Create a separate services/llmService.js.
+
+The LLM should:
+1. Generate the initial technical question.
+2. Generate adaptive follow-up questions using the candidate's previous answer and conversation history.
+3. Stay grounded in the selected curriculum day.
+4. Avoid asking duplicate questions.
+5. Return only the next interview question when generating questions.
+6. Generate structured final feedback with:
+   - summary
+   - strengths
+   - gaps
+   - next
+
+Do not let the LLM decide whether the interview is complete. The interviewController must continue enforcing:
+- minimum 8 questions
+- minimum 4 curriculum days
+
+Use environment variables for the Groq API key.
+Keep the implementation simple and suitable for a hackathon.
+
+Implement llmService.js for InterviewPilot using the Groq SDK.
+
+Create two functions:
+
+generateNextQuestion(session)
+
+generateFeedback(session)
+
+generateNextQuestion should receive:
+- candidate information
+- current curriculum topic
+- previous conversation history
+- latest candidate answer
+- current question number
+
+The LLM must:
+- ask exactly one technical question
+- stay grounded in the current curriculum topic
+- use the candidate's previous answer to create an adaptive follow-up when appropriate
+- avoid repeating previous questions
+- not discuss topics outside the selected curriculum
+- return plain text containing only the question
+
+generateFeedback should receive the completed interview session and return structured JSON:
+{
+  summary: string,
+  strengths: string[],
+  gaps: string[],
+  next: string[]
+}
+
+Use GROQ_API_KEY from process.env.
+Do not expose the API key.
+Use a model suitable for fast hackathon inference.
+
+
+We are continuing InterviewPilot.
+
+The interview controller and service are working and enforce:
+- minimum 8 questions
+- minimum 4 curriculum days
+- session-based conversation context
+
+Now implement services/llmService.js using Groq.
+
+Create:
+- generateNextQuestion(session)
+- generateFeedback(session)
+
+generateNextQuestion must use:
+- candidate information
+- current curriculum topic
+- conversation history
+- latest candidate answer
+- current question number
+
+The question must be adaptive:
+- If the candidate gives a vague answer, ask them to clarify.
+- If the answer is strong, increase technical depth.
+- If appropriate, ask a follow-up based directly on something they said.
+- Never repeat an earlier question.
+- Stay within the current curriculum topic.
+- Return exactly one interview question.
+
+generateFeedback must analyze the complete conversation and return:
+{
+  summary: string,
+  strengths: string[],
+  gaps: string[],
+  next: string[]
+}
+
+Use GROQ_API_KEY from process.env.
+Do not expose the API key.
+Keep the implementation simple and hackathon-ready.

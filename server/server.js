@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import interviewRoutes from "./routes/interviewRoutes.js";
+import "dotenv/config";
 
 const app = express();
 
