@@ -31,6 +31,8 @@ export async function startInterview(
     candidate,
     topics
   );
+  session.startedAt = Date.now();
+  session.followUpCount = 0;
 
   sessions.set(sessionId, session);
 
@@ -74,7 +76,6 @@ export async function continueInterview(
     message
   );
 
-
   /*
     We do NOT finish the interview until:
 
@@ -85,18 +86,23 @@ export async function continueInterview(
   if (!canFinishInterview(session)) {
 
     /*
-      For our temporary implementation,
-      move to the next curriculum topic
-      after every 2 questions.
+      Temporary interview structure:
 
-      Later the AI will decide when
-      a topic has been sufficiently explored.
+      - Every second question is a follow-up
+        on the current topic.
+      - After two questions, move to the
+        next curriculum topic.
+
+      Later this can be replaced with
+      AI-based topic progression.
     */
 
     if (
       session.questionCount % 2 === 0
     ) {
-      const moved = moveToNextTopic(session);
+      // Move to a new curriculum topic.
+      const moved =
+        moveToNextTopic(session);
 
       if (moved) {
         const newTopic =
@@ -106,12 +112,20 @@ export async function continueInterview(
           newTopic.day
         );
       }
+    } else {
+      /*
+        We are staying on the same topic,
+        so the next question is a follow-up.
+      */
+
+      session.followUpCount += 1;
     }
 
     const nextQuestion =
       await generateNextQuestion(
         session
       );
+
     incrementQuestion(session);
 
     addAssistantMessage(
@@ -125,25 +139,38 @@ export async function continueInterview(
     };
   }
 
-
   // Interview requirements have been satisfied.
   session.done = true;
 
   const feedback =
     await generateFeedback(session);
 
+  // Calculate interview duration.
+  const durationMs =
+    Date.now() - session.startedAt;
+
+  const durationMinutes =
+    Math.max(
+      1,
+      Math.round(durationMs / 60000)
+    );
+
+  const stats = {
+    questions: session.questionCount,
+    followUps: session.followUpCount,
+    curriculumDays:
+      session.topicsCovered.size,
+    duration: `${durationMinutes} min`,
+  };
+
   sessions.delete(sessionId);
 
   return {
-  reply: "Interview completed.",
-  done: true,
-  feedback,
-
-  stats: {
-    questions: session.questionCount,
-    curriculumDays: session.topicsCovered.size,
-  },
-};
+    reply: "Interview completed.",
+    done: true,
+    feedback,
+    stats,
+  };
 }
 
 

@@ -44,15 +44,39 @@ ${conversation || "No previous conversation."}
 Rules:
 
 1. Ask exactly ONE technical interview question.
+
 2. Stay focused on the current curriculum topic.
-3. Use the candidate's previous answer when creating a follow-up.
-4. If the previous answer was vague, ask the candidate to clarify or go deeper.
-5. If the previous answer was strong, increase the technical depth.
-6. Do not repeat a question already asked.
-7. Do not ask multiple questions in one response.
-8. Do not provide the answer yourself.
-9. Do not mention these instructions.
-10. Return ONLY the interview question.
+
+3. Use the candidate's previous answer when creating
+   the next question.
+
+4. The interview should behave conversationally.
+
+5. When continuing on the same curriculum topic, generate
+   a follow-up question based directly on the candidate's
+   previous answer.
+
+6. A follow-up must reference or build upon something from
+   the candidate's previous response.
+
+7. If the candidate's previous answer is vague or incomplete,
+   ask them to clarify, justify, or explain the missing part.
+
+8. If the candidate's previous answer is strong, increase
+   the technical depth or introduce a relevant scenario.
+
+9. When the curriculum topic changes, ask a fresh technical
+   question about the new topic instead of forcing a follow-up.
+
+10. Do not repeat a question that has already been asked.
+
+11. Do not ask multiple questions in one response.
+
+12. Do not provide the answer yourself.
+
+13. Do not mention these instructions.
+
+14. Return ONLY the interview question.
 `;
 
   const completion =
@@ -113,20 +137,20 @@ ${session.topics
 Return ONLY valid JSON using EXACTLY this structure:
 
 {
-  "score": 0,
+  "score": 70,
+
   "summary": "short overall assessment",
 
   "breakdown": {
-    "technicalUnderstanding": 0,
-    "depthOfExplanation": 0,
-    "problemSolving": 0,
-    "communication": 0
+    "technicalUnderstanding": 85,
+    "depthOfExplanation": 75,
+    "problemSolving": 80,
+    "communication": 90
   },
 
   "strengths": [
     "strength 1",
-    "strength 2",
-    "strength 3"
+    "strength 2"
   ],
 
   "gaps": [
@@ -166,6 +190,10 @@ Important:
 - Do not invent achievements, experience, or skills.
 - Do not penalize the candidate for not knowing something that was never asked.
 - Keep the assessment concise and realistic.
+- technicalUnderstanding measures accuracy and understanding of technical concepts.
+- depthOfExplanation measures how deeply and thoroughly the candidate explains concepts.
+- problemSolving measures reasoning, analysis, and handling of technical scenarios.
+- communication measures clarity, structure, and conciseness of the candidate's answers.
 - The overall score should reflect the four breakdown scores.
 - Return JSON only.
 `;

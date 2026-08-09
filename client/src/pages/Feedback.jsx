@@ -19,29 +19,33 @@ export default function Feedback() {
 const location = useLocation();
 
 const feedback = location.state?.feedback;
+console.log("FULL FEEDBACK:", feedback);
 const stats = location.state?.stats;
 const breakdown = [
   {
     title: "Technical Understanding",
-    score: null,
+    score: feedback?.breakdown?.technicalUnderstanding,
     icon: Brain,
   },
   {
     title: "Depth of Explanation",
-    score: null,
+    score: feedback?.breakdown?.depthOfExplanation,
     icon: Target,
   },
   {
     title: "Problem Solving",
-    score: null,
+    score: feedback?.breakdown?.problemSolving,
     icon: TrendingUp,
   },
   {
     title: "Communication",
-    score: null,
+    score: feedback?.breakdown?.communication,
     icon: MessageSquare,
   },
-];    
+];
+console.log("BREAKDOWN ARRAY:", breakdown);
+
+
 if (!feedback) {
   return (
     <div className="min-h-screen bg-[#0B1020] text-white flex items-center justify-center">
@@ -189,7 +193,7 @@ if (!feedback) {
                     </div>
 
                     <span className="font-semibold">
-                      {item.score !== null ? `${item.score}%` : "—"}
+                      {item.score != null ? `${item.score}%` : "—"}
                     </span>
 
                   </div>
@@ -200,7 +204,7 @@ if (!feedback) {
                     <div
                       className="h-full rounded-full bg-gradient-to-r from-violet-600 to-purple-400"
                       style={{
-                      width: item.score !== null
+                      width: item.score != null
                       ? `${item.score}%`
                       : "0%",
                   }}
