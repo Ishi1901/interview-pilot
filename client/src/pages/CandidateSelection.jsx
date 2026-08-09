@@ -1,45 +1,43 @@
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Send } from "lucide-react";
 import CandidateCard from "../components/CandidateCard";
+import candidatesData from "../data/candidates.json";
 
-const candidates = [
-  {
-    id: 1,
-    name: "Aarav Sharma",
-    initials: "AS",
-    role: "AI Engineering Learner",
-    completedMissions: 24,
-    attempts: 31,
-    progress: 78,
-  },
-  {
-    id: 2,
-    name: "Priya Mehta",
-    initials: "PM",
-    role: "AI Engineering Learner",
-    completedMissions: 27,
-    attempts: 35,
-    progress: 87,
-  },
-  {
-    id: 3,
-    name: "Rohan Patel",
-    initials: "RP",
-    role: "AI Engineering Learner",
-    completedMissions: 18,
-    attempts: 25,
-    progress: 61,
-  },
-  {
-    id: 4,
-    name: "Ananya Rao",
-    initials: "AR",
-    role: "AI Engineering Learner",
-    completedMissions: 30,
-    attempts: 38,
-    progress: 94,
-  },
-];
+const candidates = candidatesData.candidates.map((candidate) => {
+  const member = candidate.member;
+
+  const completedMissions = candidate.missions.filter(
+    (mission) => mission.passed
+  ).length;
+
+  const attempts = candidate.missions.reduce(
+    (total, mission) => total + (mission.attempts || 0),
+    0
+  );
+
+  const progress = Math.round(
+    (completedMissions / candidate.missions.length) * 100
+  );
+
+  return {
+    id: member.id,
+    name: member.name,
+    initials: member.name
+      .split(" ")
+      .map((word) => word[0])
+      .join("")
+      .slice(0, 2),
+    role: member.jobRole,
+    completedMissions,
+    attempts,
+    progress,
+
+    // Keep the complete candidate data!
+    member,
+    missions: candidate.missions,
+    signals: candidate.signals,
+  };
+});
 
 export default function CandidateSelection() {
   const navigate = useNavigate();

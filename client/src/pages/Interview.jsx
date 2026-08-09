@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import {
   Send,
@@ -11,40 +11,15 @@ import {
 
 export default function Interview() {
   const navigate = useNavigate();
+const location = useLocation();
 
-  const [answer, setAnswer] = useState("");
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
+const candidate = location.state?.candidate;
 
-  const [candidate] = useState({
-    id: "test-candidate",
-    name: "Test Candidate",
-    jobRole: "AI Engineer",
+const [answer, setAnswer] = useState("");
+const [isAnalyzing, setIsAnalyzing] = useState(false);
 
-    missions: [
-      {
-        day: 7,
-        title: "Embeddings Explained",
-        passed: true,
-      },
-      {
-        day: 8,
-        title: "Vector Databases Overview",
-        passed: true,
-      },
-      {
-        day: 12,
-        title: "Prompt Engineering Fundamentals",
-        passed: true,
-      },
-      {
-        day: 22,
-        title: "Multi-Agent Orchestration",
-        passed: true,
-      },
-    ],
-  });
 
-  const [sessionId] = useState(
+const [sessionId] = useState(
     () => `session-${Date.now()}`
   );
 
@@ -54,6 +29,26 @@ export default function Interview() {
 
 
   const [messages, setMessages] = useState([]);
+
+if (!candidate) {
+  return (
+    <div className="min-h-screen bg-[#0B1020] text-white flex items-center justify-center">
+      <div className="text-center">
+        <p className="text-gray-400 mb-4">
+          No candidate selected.
+        </p>
+
+        <button
+          onClick={() => navigate("/candidates")}
+          className="px-6 py-3 rounded-xl bg-violet-600"
+        >
+          Select Candidate
+        </button>
+      </div>
+    </div>
+  );
+}
+
 
   // --------------------------------
   // START INTERVIEW
