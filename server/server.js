@@ -5,7 +5,7 @@ import "dotenv/config";
 
 const app = express();
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
@@ -18,8 +18,8 @@ app.get("/", (req, res) => {
 
 app.use("/api", interviewRoutes);
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(
-    `InterviewPilot server running on http://localhost:${PORT}`
+    `InterviewPilot server running on port ${PORT}`
   );
 });
