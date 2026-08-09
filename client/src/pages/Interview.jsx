@@ -34,7 +34,7 @@ const candidate = location.state?.candidate;
       setIsAnalyzing(true);
 
       const response = await fetch(
-        "http://localhost:5000/api/interview",
+        "https://interview-pilot-is60.onrender.com/api/interview",
         {
           method: "POST",
 
@@ -145,7 +145,7 @@ if (!candidate) {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/interview",
+         "https://interview-pilot-is60.onrender.com/api/interview",
         {
           method: "POST",
 

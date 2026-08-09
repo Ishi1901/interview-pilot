@@ -14,7 +14,7 @@ export default function CandidateSelection() {
     const fetchCandidates = async () => {
       try {
         const response = await fetch(
-          "http://localhost:5000/api/candidates"
+          "https://interview-pilot-is60.onrender.com/api/candidates"
         );
 
         if (!response.ok) {
