@@ -1,4 +1,9 @@
-import { useState, useEffect, useRef } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+} from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import {
@@ -15,48 +20,16 @@ const location = useLocation();
 
 const candidate = location.state?.candidate;
 
-const [answer, setAnswer] = useState("");
-const [isAnalyzing, setIsAnalyzing] = useState(false);
-
-
-const [sessionId] = useState(
+  const [answer, setAnswer] = useState("");
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [sessionId] = useState(
     () => `session-${Date.now()}`
   );
-
   const [questionCount, setQuestionCount] = useState(0);
-
   const interviewStarted = useRef(false);
-
-
   const [messages, setMessages] = useState([]);
 
-if (!candidate) {
-  return (
-    <div className="min-h-screen bg-[#0B1020] text-white flex items-center justify-center">
-      <div className="text-center">
-        <p className="text-gray-400 mb-4">
-          No candidate selected.
-        </p>
-
-        <button
-          onClick={() => navigate("/candidates")}
-          className="px-6 py-3 rounded-xl bg-violet-600"
-        >
-          Select Candidate
-        </button>
-      </div>
-    </div>
-  );
-}
-
-
-  // --------------------------------
-  // START INTERVIEW
-  // --------------------------------
-
-
-
-  const startInterview = async () => {
+  const startInterview = useCallback( async () => {
     try {
       setIsAnalyzing(true);
 
@@ -117,20 +90,37 @@ if (!candidate) {
     } finally {
       setIsAnalyzing(false);
     }
-  };
+  }, [candidate, sessionId]);
 
-  useEffect(() => {
-    if (interviewStarted.current) {
-      return;
-    }
 
-    interviewStarted.current = true;
+useEffect(() => {
+  if (interviewStarted.current) {
+    return;
+  }
 
-    startInterview();
-  }, []);
-  // --------------------------------
-  // SUBMIT ANSWER
-  // --------------------------------
+  interviewStarted.current = true;
+
+  startInterview();
+}, [startInterview]); 
+
+if (!candidate) {
+  return (
+    <div className="min-h-screen bg-[#0B1020] text-white flex items-center justify-center">
+      <div className="text-center">
+        <p className="text-gray-400 mb-4">
+          No candidate selected.
+        </p>
+
+        <button
+          onClick={() => navigate("/candidates")}
+          className="px-6 py-3 rounded-xl bg-violet-600"
+        >
+          Select Candidate
+        </button>
+      </div>
+    </div>
+  );
+}
 
   const handleSubmit = async () => {
     if (!answer.trim() || isAnalyzing) {

@@ -2,85 +2,68 @@ import { Send } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-violet-500/20 bg-[#0B1020] mt-24">
+    <footer className="border-t border-white/10 bg-[#0B0B2F]">
 
-      <div className="max-w-7xl mx-auto px-6 py-14 grid md:grid-cols-3 gap-10">
+      <div className="max-w-7xl mx-auto px-6 py-12">
 
-        {/* Logo */}
+        {/* Main Footer Content */}
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
 
-        <div>
+          {/* Logo + Description */}
+          <div className="max-w-md">
 
-          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2">
 
-            <Send className="text-violet-500 rotate-[-20deg]" />
+              <Send
+                className="text-violet-500 rotate-[-20deg]"
+                size={22}
+              />
 
-            <h2 className="text-2xl font-bold">
-              Interview
-              <span className="bg-gradient-to-r from-violet-400 to-purple-600 bg-clip-text text-transparent">
-                Pilot
-              </span>
-            </h2>
+              <h2 className="text-xl font-bold">
+                Interview
+                <span className="bg-gradient-to-r from-violet-400 to-purple-600 bg-clip-text text-transparent">
+                  Pilot
+                </span>
+              </h2>
+
+            </div>
+
+            <p className="mt-4 text-sm text-gray-400 leading-6">
+              AI-powered technical interview practice that adapts
+              to each candidate's learning journey.
+            </p>
 
           </div>
 
-          <p className="mt-5 text-gray-400 leading-7">
-            AI-powered technical interview platform built for
-            personalized learning and interview preparation.
+
+          {/* Hackathon */}
+          <div className="text-left md:text-right">
+
+            <p className="text-sm text-gray-400">
+              Built for
+            </p>
+
+            <p className="text-sm font-medium text-gray-200 mt-1">
+              AB Talks AI Cohort Hackathon
+            </p>
+
+          </div>
+
+        </div>
+
+
+        {/* Bottom */}
+        <div className="border-t border-white/10 mt-10 pt-6 flex flex-col md:flex-row items-center justify-between gap-3">
+
+          <p className="text-xs text-gray-500">
+            © 2026 InterviewPilot. All rights reserved.
+          </p>
+
+          <p className="text-xs text-gray-500">
+            Built with AI · Designed for better interviews
           </p>
 
         </div>
-
-        {/* Quick Links */}
-
-        <div>
-
-          <h3 className="text-lg font-semibold mb-5">
-            Quick Links
-          </h3>
-
-          <ul className="space-y-3 text-gray-400">
-
-            <li className="hover:text-violet-400 cursor-pointer transition">
-              Home
-            </li>
-
-            <li className="hover:text-violet-400 cursor-pointer transition">
-              Features
-            </li>
-
-            <li className="hover:text-violet-400 cursor-pointer transition">
-              About
-            </li>
-
-          </ul>
-
-        </div>
-
-        {/* Tech Stack */}
-
-        <div>
-
-          <h3 className="text-lg font-semibold mb-5">
-            Tech Stack
-          </h3>
-
-          <ul className="space-y-3 text-gray-400">
-
-            <li>⚛ React</li>
-            <li>🚀 Node.js</li>
-            <li>⚡ Express</li>
-            <li>🤖 Gemini API</li>
-            <li>🎨 Tailwind CSS</li>
-
-          </ul>
-
-        </div>
-
-      </div>
-
-      <div className="border-t border-violet-500/10 py-5 text-center text-gray-500 text-sm">
-
-        © 2026 InterviewPilot • Built for the AB Talks AI Cohort Hackathon
 
       </div>
 

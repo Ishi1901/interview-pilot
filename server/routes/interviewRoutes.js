@@ -1,5 +1,7 @@
 import express from "express";
-
+import candidatesData from "../data/candidates.json" with {
+  type: "json"
+};
 import {
   startInterview,
   continueInterview,
@@ -11,6 +13,9 @@ import curriculum from "../data/curriculum.json" with {
 
 const router = express.Router();
 
+router.get("/candidates", (req, res) => {
+  res.json(candidatesData);
+});
 
 router.post("/interview", async (req, res) => {
   try {

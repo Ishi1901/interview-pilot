@@ -13,6 +13,9 @@ export default function InterviewBriefing() {
   const navigate = useNavigate();
 
   const candidate = location.state?.candidate;
+  const member = candidate?.member;
+  const missions = candidate?.missions || [];
+  const signals = candidate?.signals;
 
   // If someone opens /briefing directly
   // without selecting a candidate
@@ -52,10 +55,10 @@ export default function InterviewBriefing() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0B1020] text-white">
+    <div className="min-h-screen bg-[#0B0B2F] text-white">
 
       {/* Header */}
-      <header className="border-b border-white/10 bg-[#0B1020]/80 backdrop-blur-lg">
+      <header className="border-b border-white/10 bg-[#0B0B2F]/80 backdrop-blur-lg">
 
         <div className="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
 
@@ -118,9 +121,17 @@ export default function InterviewBriefing() {
                 {candidate.name}
               </h2>
 
-              <p className="text-gray-400">
+             <p className="text-gray-400">
                 {candidate.role}
+              {member?.yearsExperience != null &&
+              ` · ${member.yearsExperience} years experience`}
               </p>
+
+{member?.education && (
+  <p className="text-sm text-gray-500 mt-1">
+    {member.education}
+  </p>
+)}
             </div>
 
           </div>
@@ -137,16 +148,15 @@ export default function InterviewBriefing() {
                 {candidate.completedMissions}
               </p>
             </div>
-
             <div className="rounded-2xl bg-white/5 p-4">
-              <p className="text-sm text-gray-500">
-                Attempts
+            <p className="text-sm text-gray-500">
+                  First-Try Missions
               </p>
 
-              <p className="text-2xl font-bold mt-1">
-                {candidate.attempts}
-              </p>
-            </div>
+            <p className="text-2xl font-bold mt-1">
+               {signals?.missionsFirstTry ?? 0}
+            </p>
+           </div>
 
             <div className="rounded-2xl bg-white/5 p-4">
               <p className="text-sm text-gray-500">
@@ -161,6 +171,59 @@ export default function InterviewBriefing() {
           </div>
 
         </section>
+
+        <section className="mt-6 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-7">
+
+  <h2 className="text-xl font-semibold">
+    Learning History
+  </h2>
+
+  <p className="text-gray-500 mt-2">
+    The interview will use this history to personalize technical questioning.
+  </p>
+
+  <div className="grid md:grid-cols-2 gap-3 mt-6">
+
+    {missions.map((mission) => (
+      <div
+        key={mission.day}
+        className="flex items-center justify-between rounded-xl bg-white/5 p-4"
+      >
+
+        <div>
+          <p className="text-sm font-medium">
+            Day {mission.day} · {mission.title}
+          </p>
+
+          {mission.attempts && (
+            <p className="text-xs text-gray-500 mt-1">
+              {mission.attempts} attempt
+              {mission.attempts !== 1 ? "s" : ""}
+            </p>
+          )}
+        </div>
+
+        {mission.skipped ? (
+          <span className="text-xs text-yellow-400">
+            Skipped
+          </span>
+        ) : mission.passed ? (
+          <CheckCircle2
+            size={18}
+            className="text-green-400"
+          />
+        ) : (
+          <span className="text-xs text-gray-500">
+            Incomplete
+          </span>
+        )}
+
+      </div>
+    ))}
+
+  </div>
+
+</section>
 
         {/* Interview Focus */}
         <section className="grid md:grid-cols-2 gap-6 mt-6">

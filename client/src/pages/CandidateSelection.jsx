@@ -1,46 +1,73 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Send } from "lucide-react";
 import CandidateCard from "../components/CandidateCard";
-import candidatesData from "../data/candidates.json";
-
-const candidates = candidatesData.candidates.map((candidate) => {
-  const member = candidate.member;
-
-  const completedMissions = candidate.missions.filter(
-    (mission) => mission.passed
-  ).length;
-
-  const attempts = candidate.missions.reduce(
-    (total, mission) => total + (mission.attempts || 0),
-    0
-  );
-
-  const progress = Math.round(
-    (completedMissions / candidate.missions.length) * 100
-  );
-
-  return {
-    id: member.id,
-    name: member.name,
-    initials: member.name
-      .split(" ")
-      .map((word) => word[0])
-      .join("")
-      .slice(0, 2),
-    role: member.jobRole,
-    completedMissions,
-    attempts,
-    progress,
-
-    // Keep the complete candidate data!
-    member,
-    missions: candidate.missions,
-    signals: candidate.signals,
-  };
-});
 
 export default function CandidateSelection() {
   const navigate = useNavigate();
+
+  const [candidates, setCandidates] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchCandidates = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:5000/api/candidates"
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch candidates.");
+        }
+
+        const data = await response.json();
+
+        const formattedCandidates = data.candidates.map(
+          (candidate) => ({
+            // Keep the COMPLETE original candidate
+            // so we can send it to the interview later.
+            ...candidate,
+
+            // Fields used by CandidateCard
+            id: candidate.member.id,
+            name: candidate.member.name,
+            initials: candidate.member.name
+              .split(" ")
+              .map((word) => word[0])
+              .join(""),
+            role: candidate.member.jobRole,
+
+            completedMissions:
+              candidate.signals.missionsCompleted,
+
+            attempts:
+              candidate.missions.reduce(
+                (total, mission) =>
+                  total + (mission.attempts || 0),
+                0
+              ),
+
+            progress:
+              Math.round(
+                (candidate.signals.missionsCompleted /
+                  30) *
+                  100
+              ),
+          })
+        );
+
+        setCandidates(formattedCandidates);
+      } catch (error) {
+        console.error("Candidate fetch error:", error);
+        setError("Unable to load candidates.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCandidates();
+  }, []);
 
   const handleSelectCandidate = (candidate) => {
     navigate("/briefing", {
@@ -51,14 +78,13 @@ export default function CandidateSelection() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0B1020] text-white">
+    <div className="min-h-screen bg-[#0B0B2F] text-white">
 
       {/* Header */}
-      <header className="border-b border-white/10 bg-[#0B1020]/80 backdrop-blur-lg">
+      <header className="border-b border-white/10 bg-[#0B0B2F]/80 backdrop-blur-lg">
 
         <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
 
-          {/* Logo */}
           <div className="flex items-center gap-2">
 
             <Send
@@ -90,7 +116,6 @@ export default function CandidateSelection() {
       {/* Main */}
       <main className="max-w-7xl mx-auto px-6 py-16">
 
-        {/* Heading */}
         <div className="text-center max-w-2xl mx-auto">
 
           <p className="text-violet-400 text-sm font-medium mb-3">
@@ -108,18 +133,34 @@ export default function CandidateSelection() {
 
         </div>
 
+        {/* Loading */}
+        {loading && (
+          <div className="text-center text-gray-400 mt-14">
+            Loading candidates...
+          </div>
+        )}
+
+        {/* Error */}
+        {!loading && error && (
+          <div className="text-center text-red-400 mt-14">
+            {error}
+          </div>
+        )}
+
         {/* Candidate Grid */}
-        <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6 mt-14">
+        {!loading && !error && (
+          <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6 mt-14">
 
-          {candidates.map((candidate) => (
-            <CandidateCard
-              key={candidate.id}
-              candidate={candidate}
-              onSelect={handleSelectCandidate}
-            />
-          ))}
+            {candidates.map((candidate) => (
+              <CandidateCard
+                key={candidate.id}
+                candidate={candidate}
+                onSelect={handleSelectCandidate}
+              />
+            ))}
 
-        </div>
+          </div>
+        )}
 
       </main>
 

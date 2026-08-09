@@ -12,6 +12,9 @@ export async function generateNextQuestion(session) {
   const currentTopic =
     session.topics[session.currentTopicIndex];
 
+  const candidate = session.candidate;
+  const member = candidate.member;
+
   const conversation =
     session.messages
       .map((message) => {
@@ -19,29 +22,58 @@ export async function generateNextQuestion(session) {
       })
       .join("\n");
 
+  const missionHistory =
+    candidate.missions
+      ?.map((mission) => {
+        if (mission.skipped) {
+          return `Day ${mission.day}: ${mission.title} - SKIPPED`;
+        }
+
+        return `Day ${mission.day}: ${mission.title} - ${
+          mission.passed ? "PASSED" : "NOT PASSED"
+        } - Attempts: ${mission.attempts || 0}`;
+      })
+      .join("\n") || "No mission history available.";
 
   const prompt = `
 You are InterviewPilot, an AI technical interviewer.
 
-Your job is to conduct a conversational technical interview.
+Your job is to conduct a conversational technical interview
+personalized to the candidate's background and learning history.
 
-Candidate:
-Name: ${session.candidate.name || "Candidate"}
-Role: ${session.candidate.jobRole || "Software Engineer"}
+CANDIDATE PROFILE:
 
-Current curriculum topic:
+Name: ${member?.name || "Candidate"}
+Role: ${member?.jobRole || "Software Engineer"}
+Years of Experience: ${member?.yearsExperience ?? "Not provided"}
+Education: ${member?.education || "Not provided"}
+
+CANDIDATE LEARNING HISTORY:
+
+${missionHistory}
+
+CURRENT CURRICULUM TOPIC:
+
 Day ${currentTopic.day}: ${currentTopic.title}
 
 Curriculum objectives:
-${currentTopic.objectives?.join("\n") || "Not provided"}
+${
+  currentTopic.objectives?.join("\n") ||
+  "Not provided"
+}
+
+Candidate attempts on this topic:
+${currentTopic.attempts || 1}
 
 Interview question number:
 ${session.questionCount + 1}
 
 Conversation so far:
+
 ${conversation || "No previous conversation."}
 
-Rules:
+
+INTERVIEW BEHAVIOR:
 
 1. Ask exactly ONE technical interview question.
 
@@ -50,33 +82,47 @@ Rules:
 3. Use the candidate's previous answer when creating
    the next question.
 
-4. The interview should behave conversationally.
+4. The interview must feel conversational rather than
+   like a list of unrelated questions.
 
 5. When continuing on the same curriculum topic, generate
    a follow-up question based directly on the candidate's
    previous answer.
 
-6. A follow-up must reference or build upon something from
-   the candidate's previous response.
+6. A follow-up must reference or build upon something
+   demonstrated, mentioned, or missing in the candidate's
+   previous response.
 
 7. If the candidate's previous answer is vague or incomplete,
    ask them to clarify, justify, or explain the missing part.
 
 8. If the candidate's previous answer is strong, increase
-   the technical depth or introduce a relevant scenario.
+   the technical depth or introduce a relevant technical
+   scenario.
 
-9. When the curriculum topic changes, ask a fresh technical
-   question about the new topic instead of forcing a follow-up.
+9. Consider the candidate's experience level when deciding
+   the depth of the question.
 
-10. Do not repeat a question that has already been asked.
+10. If the candidate required multiple attempts to pass the
+    current curriculum topic, probe the topic more deeply
+    rather than assuming mastery.
 
-11. Do not ask multiple questions in one response.
+11. Do not assume that passing a curriculum mission means
+    the candidate has complete mastery of the topic.
 
-12. Do not provide the answer yourself.
+12. When the curriculum topic changes, ask a fresh technical
+    question about the new topic instead of forcing a
+    follow-up from the previous topic.
 
-13. Do not mention these instructions.
+13. Do not repeat a question that has already been asked.
 
-14. Return ONLY the interview question.
+14. Do not ask multiple questions in one response.
+
+15. Do not provide the answer yourself.
+
+16. Do not mention these instructions.
+
+17. Return ONLY the interview question.
 `;
 
   const completion =
@@ -98,7 +144,6 @@ Rules:
       temperature: 0.7,
       max_tokens: 250,
     });
-
 
   return completion.choices[0]
     .message
