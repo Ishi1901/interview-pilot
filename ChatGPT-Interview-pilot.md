@@ -1,7 +1,7 @@
 # Interview-Pilot
 
 
-# 🤔 The Problem Statement says
+# The Problem Statement says
 
 > Build an AI Interview Agent that interviews a candidate.
 
