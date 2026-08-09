@@ -48,12 +48,12 @@ export default function CandidateSelection() {
                 0
               ),
 
-            progress:
-              Math.round(
-                (candidate.signals.missionsCompleted /
-                  30) *
-                  100
-              ),
+            progress: Math.min(
+              100,
+            Math.round(
+              (candidate.signals.missionsCompleted / 30) * 100
+            )
+          ),
           })
         );
 

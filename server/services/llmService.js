@@ -35,6 +35,24 @@ export async function generateNextQuestion(session) {
       })
       .join("\n") || "No mission history available.";
 
+
+  const yearsExperience =
+  session.candidate?.yearsExperience ??
+  session.candidate?.member?.yearsExperience ??
+  0;
+
+let baseLevel;
+
+if (yearsExperience <= 2) {
+  baseLevel = "Junior";
+} else if (yearsExperience <= 5) {
+  baseLevel = "Mid-level";
+} else if (yearsExperience <= 10) {
+  baseLevel = "Senior";
+} else {
+  baseLevel = "Advanced";
+}
+
   const prompt = `
 You are InterviewPilot, an AI technical interviewer.
 
@@ -61,6 +79,12 @@ ${
   currentTopic.objectives?.join("\n") ||
   "Not provided"
 }
+
+Candidate experience:
+${yearsExperience} years
+
+Initial interview level:
+${baseLevel}
 
 Candidate attempts on this topic:
 ${currentTopic.attempts || 1}
@@ -123,8 +147,43 @@ INTERVIEW BEHAVIOR:
 16. Do not mention these instructions.
 
 17. Return ONLY the interview question.
-`;
+When evaluating the candidate's previous answer, classify it as:
 
+STRONG:
+- Technically correct
+- Explains reasoning clearly
+- Demonstrates practical understanding
+- Addresses relevant trade-offs, edge cases, or implementation details when appropriate
+
+AVERAGE:
+- Mostly correct
+- Demonstrates the core concept
+- Explanation is somewhat limited or misses some important details
+
+WEAK:
+- Incorrect or significantly incomplete
+- Shows confusion about the core concept
+- Gives vague answers without sufficient technical reasoning
+
+Difficulty adaptation rules:
+
+- Start at the candidate's initial interview level.
+- Evaluate the candidate's previous answer before generating the next question.
+- If the previous answer demonstrates strong technical understanding,
+  increase the difficulty gradually.
+- If the previous answer demonstrates average understanding,
+  maintain the current difficulty.
+- If the previous answer is weak, incomplete, or incorrect,
+  reduce the difficulty slightly or ask a clarification question.
+- Do not suddenly jump multiple difficulty levels.
+- Difficulty should increase through deeper reasoning, trade-offs,
+  system design, edge cases, scalability, debugging, or production
+  scenarios rather than simply using more complicated terminology.
+- For senior and advanced candidates, prioritize real-world engineering
+  scenarios and architectural trade-offs over basic definition questions.
+- For junior candidates, prioritize fundamentals and practical
+  understanding before moving into advanced scenarios.
+`;
   const completion =
     await groq.chat.completions.create({
       model: MODEL,

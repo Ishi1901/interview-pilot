@@ -119,21 +119,30 @@ if (!feedback) {
           <div className="flex flex-col md:flex-row items-center gap-10">
 
             {/* Score */}
-            <div className="relative w-40 h-40 rounded-full border-[10px] border-violet-500/20 flex items-center justify-center">
+<div
+  className="relative w-40 h-40 rounded-full flex items-center justify-center"
+  style={{
+    background: `conic-gradient(
+      #8b5cf6 ${feedback.score}%,
+      rgba(255,255,255,0.08) ${feedback.score}% 100%
+    )`,
+  }}
+>
 
-              <div className="text-center">
+  {/* Inner circle */}
+  <div className="w-[120px] h-[120px] rounded-full bg-[#151A2B] flex flex-col items-center justify-center">
 
-                <p className="text-4xl font-bold">
-                  {feedback.score}
-                </p>
+    <p className="text-4xl font-bold">
+      {feedback.score}
+    </p>
 
-                <p className="text-xs text-gray-500">
-                  / 100
-                </p>
+    <p className="text-xs text-gray-500">
+      / 100
+    </p>
 
-              </div>
+  </div>
 
-            </div>
+</div>
 
 
             {/* Summary */}
