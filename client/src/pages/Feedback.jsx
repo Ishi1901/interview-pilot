@@ -1,4 +1,7 @@
-import { useNavigate } from "react-router-dom";
+import {
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
 import {
   Bot,
   CheckCircle2,
@@ -10,65 +13,53 @@ import {
   MessageSquare,
 } from "lucide-react";
 
-const feedback = {
-  score: 82,
-
-  summary:
-    "You demonstrated a solid understanding of the core AI concepts and were able to explain the reasoning behind your answers. Your responses were strongest when discussing RAG and vector databases.",
-
-  breakdown: [
-    {
-      title: "Technical Understanding",
-      score: 86,
-      icon: Brain,
-    },
-    {
-      title: "Depth of Explanation",
-      score: 78,
-      icon: Target,
-    },
-    {
-      title: "Problem Solving",
-      score: 84,
-      icon: TrendingUp,
-    },
-    {
-      title: "Communication",
-      score: 80,
-      icon: MessageSquare,
-    },
-  ],
-
-  strengths: [
-    "Good understanding of RAG architecture.",
-    "Clearly explained how vector databases support retrieval.",
-    "Demonstrated good reasoning while answering follow-up questions.",
-  ],
-
-  improvements: [
-    "Go deeper into the trade-offs between different retrieval strategies.",
-    "Use more concrete examples when explaining system architecture.",
-    "Practice explaining complex concepts in a more structured manner.",
-  ],
-
-  topics: [
-    "Retrieval-Augmented Generation",
-    "Vector Databases",
-    "Prompt Engineering",
-    "Agentic AI",
-  ],
-
-  stats: {
-    questions: 8,
-    followUps: 4,
-    curriculumDays: 5,
-    duration: "18 min",
-  },
-};
 
 export default function Feedback() {
   const navigate = useNavigate();
+const location = useLocation();
 
+const feedback = location.state?.feedback;
+const stats = location.state?.stats;
+const breakdown = [
+  {
+    title: "Technical Understanding",
+    score: null,
+    icon: Brain,
+  },
+  {
+    title: "Depth of Explanation",
+    score: null,
+    icon: Target,
+  },
+  {
+    title: "Problem Solving",
+    score: null,
+    icon: TrendingUp,
+  },
+  {
+    title: "Communication",
+    score: null,
+    icon: MessageSquare,
+  },
+];    
+if (!feedback) {
+  return (
+    <div className="min-h-screen bg-[#0B1020] text-white flex items-center justify-center">
+      <div className="text-center">
+        <h1 className="text-2xl font-bold">
+          No interview feedback found.
+        </h1>
+
+        <button
+          onClick={() => navigate("/candidates")}
+          className="mt-6 px-6 py-3 rounded-xl bg-violet-600"
+        >
+          Start Interview
+        </button>
+      </div>
+    </div>
+  );
+}
   return (
     <div className="min-h-screen bg-[#0B1020] text-white">
 
@@ -168,7 +159,7 @@ export default function Feedback() {
 
           <div className="grid md:grid-cols-2 gap-5">
 
-            {feedback.breakdown.map((item) => {
+            {breakdown.map((item) => {
 
               const Icon = item.icon;
 
@@ -198,7 +189,7 @@ export default function Feedback() {
                     </div>
 
                     <span className="font-semibold">
-                      {item.score}%
+                      {item.score !== null ? `${item.score}%` : "—"}
                     </span>
 
                   </div>
@@ -209,8 +200,10 @@ export default function Feedback() {
                     <div
                       className="h-full rounded-full bg-gradient-to-r from-violet-600 to-purple-400"
                       style={{
-                        width: `${item.score}%`,
-                      }}
+                      width: item.score !== null
+                      ? `${item.score}%`
+                      : "0%",
+                  }}
                     />
 
                   </div>
@@ -270,7 +263,7 @@ export default function Feedback() {
 
             <div className="space-y-4 mt-5">
 
-              {feedback.improvements.map((item) => (
+              {feedback.gaps.map((item) => (
 
                 <div
                   key={item}
@@ -310,7 +303,12 @@ export default function Feedback() {
 
           <div className="flex flex-wrap gap-3 mt-5">
 
-            {feedback.topics.map((topic) => (
+            {[
+            "Retrieval-Augmented Generation",
+            "Vector Databases",
+            "Prompt Engineering",
+            "Agentic AI",
+            ].map((topic) => (
 
               <span
                 key={topic}
@@ -334,7 +332,7 @@ export default function Feedback() {
               Questions
             </p>
             <p className="text-2xl font-bold mt-1">
-              {feedback.stats.questions}
+            {stats?.questions ?? 0}
             </p>
           </div>
 
@@ -343,8 +341,8 @@ export default function Feedback() {
               Follow-ups
             </p>
             <p className="text-2xl font-bold mt-1">
-              {feedback.stats.followUps}
-            </p>
+            {stats?.followUps ?? 0}
+              </p>
           </div>
 
           <div className="rounded-2xl bg-white/5 border border-white/10 p-5">
@@ -352,7 +350,7 @@ export default function Feedback() {
               Curriculum Days
             </p>
             <p className="text-2xl font-bold mt-1">
-              {feedback.stats.curriculumDays}
+             {stats?.curriculumDays ?? 0}
             </p>
           </div>
 
@@ -361,7 +359,7 @@ export default function Feedback() {
               Duration
             </p>
             <p className="text-2xl font-bold mt-1">
-              {feedback.stats.duration}
+            {stats?.duration ?? "—"}
             </p>
           </div>
 

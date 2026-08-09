@@ -84,20 +84,20 @@ Rules:
 
 
 export async function generateFeedback(session) {
-
-  const conversation =
-    session.messages
-      .map((message) => {
-        return `${message.role}: ${message.content}`;
-      })
-      .join("\n");
-
+  const conversation = session.messages
+    .map((message) => {
+      return `${message.role}: ${message.content}`;
+    })
+    .join("\n");
 
   const prompt = `
-Evaluate this technical interview.
+You are InterviewPilot, an expert technical interview evaluator.
+
+Evaluate the candidate based ONLY on the interview conversation below.
 
 Candidate:
-${session.candidate.name || "Candidate"}
+Name: ${session.candidate.name || "Candidate"}
+Role: ${session.candidate.jobRole || "Software Engineer"}
 
 Interview conversation:
 ${conversation}
@@ -110,32 +110,64 @@ ${session.topics
   )
   .join("\n")}
 
-Return ONLY valid JSON using exactly this structure:
+Return ONLY valid JSON using EXACTLY this structure:
 
 {
+  "score": 0,
   "summary": "short overall assessment",
+
+  "breakdown": {
+    "technicalUnderstanding": 0,
+    "depthOfExplanation": 0,
+    "problemSolving": 0,
+    "communication": 0
+  },
+
   "strengths": [
     "strength 1",
-    "strength 2"
+    "strength 2",
+    "strength 3"
   ],
+
   "gaps": [
     "gap 1",
     "gap 2"
   ],
+
   "next": [
     "recommendation 1",
     "recommendation 2"
   ]
 }
 
-Evaluate:
-- technical understanding
-- depth of explanation
-- reasoning
-- ability to answer follow-ups
-- understanding of the curriculum topics
+Scoring rules:
 
-Do not invent information that is not supported by the conversation.
+- "score" must be an integer from 0 to 100.
+- "technicalUnderstanding" must be an integer from 0 to 100.
+- "depthOfExplanation" must be an integer from 0 to 100.
+- "problemSolving" must be an integer from 0 to 100.
+- "communication" must be an integer from 0 to 100.
+
+Evaluate the candidate on:
+
+1. Technical correctness
+2. Depth of explanation
+3. Ability to reason through technical problems
+4. Ability to answer follow-up questions
+5. Understanding of the curriculum topics
+6. Clarity and structure of communication
+
+Important:
+
+- Evaluate the COMPLETE conversation, not just the final answer.
+- Follow-up answers are important evidence of technical depth.
+- If the candidate says they do not know something, treat that as a knowledge gap.
+- Do not give credit for knowledge the candidate did not demonstrate.
+- Do not invent achievements, experience, or skills.
+- Do not penalize the candidate for not knowing something that was never asked.
+- Keep the assessment concise and realistic.
+- The overall score should reflect the four breakdown scores.
+- Return JSON only.
 `;
 
   const completion =
@@ -155,12 +187,12 @@ Do not invent information that is not supported by the conversation.
       ],
 
       temperature: 0.3,
-      max_tokens: 600,
+      max_tokens: 900,
+
       response_format: {
         type: "json_object",
       },
     });
-
 
   return JSON.parse(
     completion.choices[0].message.content

@@ -527,3 +527,57 @@ generateFeedback must analyze the complete conversation and return:
 Use GROQ_API_KEY from process.env.
 Do not expose the API key.
 Keep the implementation simple and hackathon-ready.
+
+
+<!-- Feedback form -->
+<!-- Step 1 — Update llmService.js
+
+Find your generateFeedback() prompt.
+
+Change the requested output to this:
+
+Return ONLY valid JSON in exactly this structure: -->
+
+Return ONLY valid JSON in exactly this structure:
+
+{
+  "score": 0,
+  "summary": "string",
+  "breakdown": {
+    "technicalUnderstanding": 0,
+    "depthOfExplanation": 0,
+    "problemSolving": 0,
+    "communication": 0
+  },
+  "strengths": [
+    "string"
+  ],
+  "gaps": [
+    "string"
+  ],
+  "next": [
+    "string"
+  ]
+}
+
+Scoring rules:
+
+- score: overall interview score from 0 to 100
+- technicalUnderstanding: 0 to 100
+- depthOfExplanation: 0 to 100
+- problemSolving: 0 to 100
+- communication: 0 to 100
+
+Evaluate the candidate based on the complete conversation.
+
+Consider:
+- correctness of technical answers
+- depth and clarity
+- ability to reason through problems
+- quality of follow-up responses
+- ability to explain concepts
+- handling of difficult questions
+
+Do not invent achievements or knowledge that the candidate did not demonstrate.
+
+Return JSON only.

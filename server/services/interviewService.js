@@ -135,10 +135,15 @@ export async function continueInterview(
   sessions.delete(sessionId);
 
   return {
-    reply: "Interview completed.",
-    done: true,
-    feedback,
-  };
+  reply: "Interview completed.",
+  done: true,
+  feedback,
+
+  stats: {
+    questions: session.questionCount,
+    curriculumDays: session.topicsCovered.size,
+  },
+};
 }
 
 
